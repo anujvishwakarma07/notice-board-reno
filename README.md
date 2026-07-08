@@ -2,7 +2,7 @@
 
 A premium, minimalist Notice Board web application built using **Next.js (Pages Router)**, **Prisma ORM**, **Neon PostgreSQL**, and **Tailwind CSS**.
 
-This project provides a fully functional announcement board that supports full Create, Read, Update, and Delete (CRUD) operations. Urgent notices are automatically prioritized on the database level and highlighted on the dashboard with a clean left crimson accent bar.
+This project provides a fully functional announcement board that supports full Create, Read, Update, and Delete (CRUD) operations. Urgent notices are prioritized on the database level and highlighted on the dashboard with a custom crimson border bar and pulsing indicator dot.
 
 ---
 
@@ -57,8 +57,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 If given more time, I would implement the following enhancements:
 1. **Cloud-Based Image Uploads:** Currently, the optional image field takes an external URL string. I would integrate **Supabase Storage** or **Cloudinary** so users can upload files directly from their local device instead of pasting URLs.
-2. **Optimistic UI Updates:** Integrate client-side state libraries like **SWR** or **React Query**. This would make the CRUD actions feel instantaneous by updating the UI immediately before waiting for the database server response.
-3. **Advanced Search & Filtering:** Add a search bar at the top of the dashboard along with category tabs (Exam, Event, General) to help users quickly filter notices as the board grows.
+2. **User Authentication & Role-Based Access Control (RBAC):** Integrate NextAuth.js or Clerk to secure the admin controls. This would restrict notice creation, editing, and deletion to authorized staff and faculty, while keeping the public dashboard read-only for students.
+3. **Server-Side Search & Pagination:** Transition the search bar and category filters from client-side state filtering to database-level queries with cursor-based pagination. This ensures the application remains highly performant even when notice boards scale to thousands of entries.
 
 ---
 
