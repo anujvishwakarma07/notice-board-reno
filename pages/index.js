@@ -3,11 +3,15 @@ import Head from "next/head";
 import Header from "../components/Header";
 import NoticeCard from "../components/NoticeCard";
 import NoticeFormModal from "../components/NoticeFormModal";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const [showModal, setShowModal] = useState(false);
   const [editNoticeId, setEditNoticeId] = useState(null);
@@ -137,8 +141,24 @@ export default function Home() {
     }
   };
 
+  const filteredNotices = notices.filter((notice) => {
+    const matchesSearch = 
+      notice.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      notice.body.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = 
+      selectedCategory === "All" || notice.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const totalNoticesCount = notices.length;
+  const urgentCount = notices.filter(n => n.priority === 'Urgent').length;
+  const examCount = notices.filter(n => n.category === 'Exam').length;
+  const eventCount = notices.filter(n => n.category === 'Event').length;
+
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans pb-12">
+    <div className="min-h-screen flex flex-col bg-zinc-50 text-zinc-900 font-sans">
       <Head>
         <title>Reno Notice Board</title>
         <meta name="description" content="Keep up with the latest announcements, exams, and events." />
@@ -147,7 +167,59 @@ export default function Home() {
 
       <Header onAddClick={handleOpenAddModal} />
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-6xl mx-auto px-6 py-8 flex-grow w-full">
+        
+        {!loading && !error && notices.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white border border-zinc-200 p-4 rounded-none">
+              <p className="text-[10px] font-mono text-zinc-400 uppercase font-bold tracking-wider">Total Notices</p>
+              <p className="text-xl font-bold mt-1 text-zinc-900">{totalNoticesCount}</p>
+            </div>
+            <div className="bg-white border border-zinc-200 p-4 rounded-none">
+              <p className="text-[10px] font-mono text-zinc-400 uppercase font-bold tracking-wider">Urgent Alerts</p>
+              <p className="text-xl font-bold mt-1 text-red-650">{urgentCount}</p>
+            </div>
+            <div className="bg-white border border-zinc-200 p-4 rounded-none">
+              <p className="text-[10px] font-mono text-zinc-400 uppercase font-bold tracking-wider">Exams Listed</p>
+              <p className="text-xl font-bold mt-1 text-purple-700">{examCount}</p>
+            </div>
+            <div className="bg-white border border-zinc-200 p-4 rounded-none">
+              <p className="text-[10px] font-mono text-zinc-400 uppercase font-bold tracking-wider">Events Scheduled</p>
+              <p className="text-xl font-bold mt-1 text-emerald-700">{eventCount}</p>
+            </div>
+          </div>
+        )}
+
+        {!loading && !error && notices.length > 0 && (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div className="flex bg-zinc-200/50 p-1 border border-zinc-200 rounded-none self-start">
+              {["All", "General", "Exam", "Event"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 text-xs font-mono font-bold uppercase transition-all rounded-none ${
+                    selectedCategory === cat
+                      ? "bg-white text-zinc-950 shadow-sm border border-zinc-200"
+                      : "text-zinc-500 hover:text-zinc-800"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full md:w-72">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search announcements..."
+                className="w-full border border-zinc-300 bg-white rounded-none px-3.5 py-2 text-xs font-sans focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-all font-medium text-zinc-900"
+              />
+            </div>
+          </div>
+        )}
+
         {loading && (
           <div className="flex flex-col items-center justify-center py-24">
             <div className="border border-zinc-200 bg-white rounded-none px-5 py-3 font-mono text-xs font-bold uppercase flex items-center gap-2.5 shadow-sm text-zinc-600">
@@ -159,7 +231,7 @@ export default function Home() {
 
         {!loading && error && (
           <div className="bg-white border border-red-200 text-zinc-900 p-6 rounded-none max-w-md mx-auto my-12 shadow-sm">
-            <p className="font-mono text-xs font-bold uppercase text-red-650 mb-2">Notice Board Error</p>
+            <p className="font-mono text-xs font-bold uppercase text-red-600 mb-2">Notice Board Error</p>
             <p className="text-sm font-semibold">{error}</p>
             <button
               onClick={fetchNotices}
@@ -174,7 +246,7 @@ export default function Home() {
           <div className="text-center py-20 max-w-md mx-auto bg-white rounded-none border border-zinc-200 shadow-sm p-8 mt-10">
             <div className="w-12 h-12 border border-zinc-200 text-zinc-400 rounded-none flex items-center justify-center mx-auto mb-4 bg-zinc-50">
               <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
             </div>
             <h3 className="text-sm font-bold text-zinc-900 uppercase tracking-tight">No announcements posted</h3>
@@ -191,18 +263,31 @@ export default function Home() {
         )}
 
         {!loading && !error && notices.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notices.map((notice) => (
-              <NoticeCard
-                key={notice.id}
-                notice={notice}
-                onEdit={handleOpenEditModal}
-                onDelete={handleDeleteNotice}
-              />
-            ))}
-          </div>
+          <>
+            {filteredNotices.length === 0 ? (
+              <div className="text-center py-12 max-w-sm mx-auto border border-dashed border-zinc-300 p-6 bg-white shadow-sm">
+                <p className="font-mono text-xs text-zinc-400 uppercase font-bold">No results found</p>
+                <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
+                  No announcements match your search criteria. Try a different query or select a different category.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredNotices.map((notice) => (
+                  <NoticeCard
+                    key={notice.id}
+                    notice={notice}
+                    onEdit={handleOpenEditModal}
+                    onDelete={handleDeleteNotice}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
+
+      <Footer />
 
       <NoticeFormModal
         isOpen={showModal}

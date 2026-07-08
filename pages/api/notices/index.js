@@ -43,7 +43,7 @@ export default async function handler(req, res) {
           category,
           priority,
           publishDate: new Date(publishDate),
-          image: image && image.trim() !== '' ? image.trim() : null // Image is optional
+          image: image && image.trim() !== '' ? image.trim() : null
         }
       });
 
