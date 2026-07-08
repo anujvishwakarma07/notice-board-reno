@@ -64,7 +64,7 @@ If given more time, I would implement the following enhancements:
 
 ## AI Usage Disclosure
 
-In accordance with the submission guidelines, AI tools were utilized during the development of this project in the following capacities:
-- **Prisma 7 Configuration Reference:** Used AI to reference the newly introduced `prisma.config.ts` specification in Prisma 7, ensuring database connection drivers and migrations were configured correctly under the new driver adapter standard.
-- **Boilerplate & Layout Assistance:** Assisted in generating the standard initial responsive layouts and verifying CSS class alignment.
-- **Debugging Reference:** Consulted AI to verify runtime connection pooling parameters when integrating Neon database drivers.
+In accordance with the submission guidelines, AI tools (including **GitHub Copilot**) were utilized as collaborative coding assistants during the development of this project in the following capacities:
+- **Architectural & Conceptual Alignment:** Used AI to explore and lay out a clean structure using the Next.js Pages Router, establishing clean boundary lines between the front-end layout and server-side CRUD controllers.
+- **Boilerplate & Setup Speed:** Assisted in generating the standard initial boilerplate configuration for the Prisma 7 client connection, Neon driver adapter integration, and baseline SQL migrations.
+- **UI Design & Tailwind Composition:** Utilized AI to speed up design iterations for the notice board's custom aesthetic. AI assisted in composing the custom Tailwind utility groupings for the responsive grid, mapping the Plus Jakarta Sans and JetBrains Mono typography config, and fine-tuning the visual layout of the dashboard slip-memo cards and urgent alert states.
